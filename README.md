@@ -28,5 +28,5 @@ console.log(q.popFront());  // "C"
 console.log(q.peekBack());  // "Y"
 console.log(q.peekFront());  // "B"
 q.pushBack(q.popFront());  // Look, ma! O(1) rotate!
-console.log([...q]);  // ["A", "L", "I", "J" "R", "X", "Y", "B"]
+console.log([...q]);  // ["A", "L", "I", "J", "R", "X", "Y", "B"]
 ```
