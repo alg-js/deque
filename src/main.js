@@ -46,7 +46,7 @@ export class Deque {
         return deque;
     }
 
-    size() {
+    get length() {
         return this.#size;
     }
 

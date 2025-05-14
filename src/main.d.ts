@@ -10,22 +10,19 @@
  * @template T
  */
 export class Deque<T> {
+  /** Returns the size of the queue */
+  readonly length: number;
+
   /**
    * Creates an empty deque
    */
-  constructor(initial: Iterable<T> | null);
+  constructor();
 
   /**
    * Creates a deque with the given items
    * @param {Iterable<T>} initial
    */
   static from<T>(initial: Iterable<T>): Deque<T>;
-
-  /**
-   * Returns the size of the queue
-   * @returns {number}
-   */
-  size(): number;
 
   /**
    * Pushes an item to the back of the queue
@@ -157,10 +154,10 @@ export class Deque<T> {
    * Modifying the deque while iterating is undefined behaviour.
    *
    * @param {Object} options Options for iterating over values
-   * @param {boolean} options.reversed `true` if items should be iterated in
+   * @param {boolean?} options.reversed `true` if items should be iterated in
    *  reversed order.
    */
-  values({ reversed }?: { reversed: boolean }): Iterator<T>;
+  values(options?: { reversed?: boolean }): Iterator<T>;
 
   /**
    * Iterates over items in the queue.

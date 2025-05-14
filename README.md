@@ -5,6 +5,8 @@
 
 A deque implemented as an array blocked doubly linked list.
 
+See [@alg/buffer](https://jsr.io/@alg/buffer) for a generic buffer.
+
 ## Install
 
 ```
