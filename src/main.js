@@ -1,21 +1,8 @@
-/* @ts-self-types="./types.d.ts" */
+/* @ts-self-types="./main.d.ts" */
 
 const BLOCK_SIZE = 64;
 
-/**
- * Creates a deque with the given items
- *
- * @template T
- * @param {Iterable<T> | null} initial
- * @returns {Deque<T>}
- */
-export function deque(initial = null) {
-    return new Deque(initial);
-}
-
-/**
- * @template T
- */
+/** @template T */
 class Block {
     /** @type {?Block<T>} */
     left;
@@ -35,30 +22,15 @@ class Block {
     }
 }
 
-/**
- * Generic double-ended queue.
- *
- * All push/pop operations are O(1)
- *
- * @template T
- */
+
 export class Deque {
-    /** @type {Block<T>} */
     #left;
-    /** @type {Block<T>} */
     #right;
-    /** @type {number} */
     #leftIndex;
-    /** @type {number} */
     #rightIndex;
-    /** @type {number} */
     #size;
 
-    /**
-     * Creates a deque with the given items
-     * @param {Iterable<T> | null} initial
-     */
-    constructor(initial = null) {
+    constructor() {
         const emptyBlock = new Block();
         this.#left = emptyBlock;
         this.#right = emptyBlock;
@@ -66,23 +38,18 @@ export class Deque {
         this.#leftIndex = Math.floor(BLOCK_SIZE / 2);
         this.#rightIndex = Math.floor(BLOCK_SIZE / 2) - 1;
         this.#size = 0;
-        if (initial !== null) {
-            this.pushAllBack(initial);
-        }
     }
 
-    /**
-     * Returns the size of the queue
-     * @returns {number}
-     */
+    static from(initial) {
+        const deque = new Deque();
+        deque.pushAllBack(initial);
+        return deque;
+    }
+
     size() {
         return this.#size;
     }
 
-    /**
-     * Pushes an item to the back of the queue
-     * @param {T} item
-     */
     pushBack(item) {
         this.#rightIndex += 1;
         if (this.#rightIndex === BLOCK_SIZE) {
@@ -95,20 +62,12 @@ export class Deque {
         this.#size += 1;
     }
 
-    /**
-     * Pushes all items to the back ofthe queue
-     * @param {Iterable<T>} items
-     */
     pushAllBack(items) {
         for (const item of items) {
             this.pushBack(item);
         }
     }
 
-    /**
-     * Pushes an item to the front of the queue
-     * @param {T} item
-     */
     pushFront(item) {
         this.#leftIndex -= 1;
         if (this.#leftIndex === -1) {
@@ -121,22 +80,12 @@ export class Deque {
         this.#size += 1;
     }
 
-    /**
-     * Pushes all items to the front of the queue.
-     * @param {Iterable<T>} items
-     * @note this in effect reverses the items in `items`
-     */
     pushAllFront(items) {
         for (const item of items) {
             this.pushFront(item);
         }
     }
 
-    /**
-     * Pops and returns the item at the back of the queue.
-     * @returns {T}
-     * @throws {Error} if the queue is empty
-     */
     popBack() {
         if (this.#size === 0) {
             throw new Error("Called `.popBack` on empty queue");
@@ -156,11 +105,6 @@ export class Deque {
         return value;
     }
 
-    /**
-     * Pops and returns the item at the front of the queue.
-     * @returns {T}
-     * @throws {Error} if the queue is empty
-     */
     popFront() {
         if (this.#size === 0) {
             throw new Error("Called `.popFront` on empty queue");
@@ -180,11 +124,34 @@ export class Deque {
         return value;
     }
 
-    /**
-     * Returns the item at the back of the queue.
-     * @returns {T}
-     * @throws {Error} if the queue is empty
-     */
+    popBackK(k) {
+        if (this.#size < k) {
+            throw new Error(
+                "called `.popBackK` on deque with fewer than k items",
+            );
+        } else {
+            const result = [];
+            for (let i = 0; i < k; i++) {
+                result.push(this.popBack());
+            }
+            return result;
+        }
+    }
+
+    popFrontK(k) {
+        if (this.#size < k) {
+            throw new Error(
+                "called `.popFrontK` on deque with fewer than k items",
+            );
+        } else {
+            const result = [];
+            for (let i = 0; i < k; i++) {
+                result.push(this.popFront());
+            }
+            return result;
+        }
+    }
+
     peekBack() {
         if (this.#size === 0) {
             throw new Error("called `.peekBack` on empty deque");
@@ -193,11 +160,6 @@ export class Deque {
         }
     }
 
-    /**
-     * Returns the item at the front of the queue.
-     * @returns {T}
-     * @throws {Error} if the queue is empty
-     */
     peekFront() {
         if (this.#size === 0) {
             throw new Error("called `.peekFront` on empty deque");
@@ -206,11 +168,30 @@ export class Deque {
         }
     }
 
-    /**
-     * Iterates over items in the queue. Behaviour is not defined if the queue
-     * is modified during iteration.
-     * @returns {Generator<T, void, void>}
-     */
+    peekBackK(k) {
+        if (this.#size < k) {
+            throw new Error("called `.peekBackK` on empty deque");
+        } else {
+            return [...this.#iterReversed().take(k)];
+        }
+    }
+
+    peekFrontK(k) {
+        if (this.#size < k) {
+            throw new Error("called `.peekFrontK` on empty deque");
+        } else {
+            return [...this[Symbol.iterator]().take(k)];
+        }
+    }
+
+    values({reversed = false} = {}) {
+        if (reversed) {
+            return this.#iterReversed();
+        } else {
+            return this[Symbol.iterator]();
+        }
+    }
+
     * [Symbol.iterator]() {
         if (this.#left === this.#right) {
             const block = this.#left;
@@ -228,6 +209,29 @@ export class Deque {
             }
             for (let i = 0; i <= this.#rightIndex; i++) {
                 yield this.#right.data[i];
+            }
+        }
+    }
+
+    * #iterReversed() {
+        if (this.#left === this.#right) {
+            const block = this.#left;
+            for (let i = this.#rightIndex; i >= this.#leftIndex; i--) {
+                yield block.data[i];
+            }
+        } else {
+            for (let i = this.#rightIndex; i >= 0; i--) {
+                yield this.#right.data[i];
+            }
+            let block = this.#right.left;
+            while (block !== this.#left) {
+                for (let i = BLOCK_SIZE - 1; i >= 0; i--) {
+                    yield block.data[i];
+                }
+                block = block.left;
+            }
+            for (let i = BLOCK_SIZE - 1; i >= this.#leftIndex; i--) {
+                yield this.#left.data[i];
             }
         }
     }
