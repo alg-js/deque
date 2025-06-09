@@ -1,7 +1,7 @@
 {
   "name": "@alg/deque",
-  "version": "0.0.3",
-  "license": "MIT",
+  "version": "0.0.4",
+  "license": "Apache-2.0",
   "exports": "./src/main.js",
   "lock": false,
   "publish": {
@@ -9,9 +9,6 @@
       "LICENSE",
       "README.md",
       "src/**"
-    ],
-    "exclude": [
-      "tests/**"
     ]
   }
 }

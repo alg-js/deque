@@ -1,7 +1,7 @@
 # @alg/deque
 
 [![JSR](https://jsr.io/badges/@alg/deque)](https://jsr.io/@alg/deque)
-[![License](https://img.shields.io/badge/MIT-green?label=license)](https://github.com/alg-js/deque/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/Apache--2.0-green?label=license)](https://codeberg.org/algjs/deque/src/branch/main/LICENSE)
 
 A deque implemented as an array blocked doubly linked list.
 
@@ -12,6 +12,27 @@ See [@alg/buffer](https://jsr.io/@alg/buffer) for a generic buffer.
 ```
 deno add jsr:@alg/deque
 ```
+
+<details>
+<summary>Other Install Options</summary>
+
+```bash
+npx jsr add @alg/deque
+```
+```bash
+bunx jsr add @alg/deque
+```
+```bash
+pnpm i jsr:@alg/deque
+```
+```bash
+yarn add jsr:@alg/deque
+```
+```bash
+vlt install jsr:@alg/deque
+```
+
+</details>
 
 ## Example
 
